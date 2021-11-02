@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" ref="wrapper">
+  <div class="wrapper" ref="wrapper" >
     <div class="content">
       <slot></slot>
     </div>
@@ -42,10 +42,13 @@ export default {
   },
   methods: {
       scrollTo(x,y,time=300){
-          this.scroll.scrollTo(x,y,time)
+          this.scroll && this.scroll.scrollTo(x,y,time)
       },
       finishPullUp(){
-          this.scroll.finishPullUp()
+          this.scroll && this.scroll.finishPullUp()
+      },
+      refresh(){
+          this.scroll && this.scroll.refresh()
       }
   }
 };

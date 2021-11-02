@@ -67,6 +67,14 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+
+    
+  },
+  mounted(){
+    this.$bus.$on('itemImageLoad',()=>{
+      console.log('----')
+      this.$refs.Scroll.refresh()
+    })
   },
   methods: {
     //事件监听相关的方法
