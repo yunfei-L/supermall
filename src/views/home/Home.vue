@@ -63,13 +63,21 @@ export default {
       currentType: "pop",
       isShowBackTop:false,
       tabOffsetTop:0,
-      isTabFixed:false
+      isTabFixed:false,
+      saveY:0
     };
   },
   computed: {
     showGoods() {
       return this.goods[this.currentType].list;
     },
+  },
+  activated(){
+    this.$refs.Scroll.scrollTo(0,this.saveY,0)
+    this.$refs.Scroll.refresh()
+  },
+  deactivated(){
+    this.saveY = this.$refs.Scroll.getScrollY()
   },
   created() {
     this.getHomeMultidata();
@@ -79,7 +87,6 @@ export default {
 
   },
   mounted(){
-    
     const refresh = debounce(this.$refs.Scroll.refresh,500)
     this.$bus.$on('itemImageLoad',()=>{
       refresh()
