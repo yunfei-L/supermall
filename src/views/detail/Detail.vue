@@ -1,11 +1,12 @@
 <template>
   <div id="detail">
     <detail-nav-bar class="detail-nav"></detail-nav-bar>
-    <scroll class="content" :probe-type="3" :pull-up-load="true">
+    <scroll class="content" :probe-type="3" :pull-up-load="true" ref="scroll">
       <detail-swiper :top-images="topImages"></detail-swiper>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
-      <detail-goods-info :detail-info="detailInfo"></detail-goods-info>
+      <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"></detail-goods-info>
+      <detail-param-info :param-info="paramInfo"></detail-param-info>
     </scroll>
   </div>
 </template>
@@ -15,11 +16,13 @@ import DetailNavBar from "./childCompos/DetailNavBar.vue";
 import DetailSwiper from "./childCompos/DetailSwiper.vue";
 import DetailBaseInfo from "./childCompos/DetailBaseInfo.vue";
 import DetailShopInfo from "./childCompos/DetailShopInfo.vue";
+import DetailParamInfo from "./childCompos/DetailParamInfo.vue"
 
 
 import Scroll from "components/common/scroll/Scroll";
-import { getDetail, Goods, Shop } from "../../network/detail";
+import { getDetail, Goods, Shop,GoodsParam } from "../../network/detail";
 import DetailGoodsInfo from './childCompos/DetailGoodsInfo.vue';
+
 
 
 
@@ -32,14 +35,16 @@ export default {
     DetailShopInfo,
     Scroll,
     DetailGoodsInfo,
+    DetailParamInfo
   },
   data() {
-    return {
+    return{
       iid: null,
       topImages: [],
       goods: {},
       shop: {},
-      detailInfo:{}
+      detailInfo:{},
+      paramInfo:{}
     };
   },
   created() {
@@ -63,8 +68,16 @@ export default {
 
       //4.保存商品的详情数据
       this.detailInfo = data.detailInfo
+
+      //5.获取参数的信息
+      this.paramInfo = new GoodsParam(data.itemParams.info,data.itemParams.rule)
     });
   },
+  methods:{
+      imageLoad(){
+          this.$refs.scroll.refresh()
+      }
+  }
 };
 </script>
 
