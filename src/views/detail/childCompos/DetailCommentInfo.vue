@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div v-if="Object.keys(commentInfo).length !== 0" class="comment-info">
       <div class="info-header">
         <div class="header-title">用户评价</div>
@@ -23,25 +22,30 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
-  import {formatDate} from "@/common/utils";
+  import {formatDate} from "@/common/utils"
 
   export default {
 		name: "DetailCommentInfo",
     props: {
-		  commentInfo: {
-		    type: Object,
+		  commentInfo:{
+        type:Object,
+        default(){
+          return {}
+        }
       }
     },
-    filters: {
-		  showDate: function (value) {
-        let date = new Date(value*1000);
-        return formatDate(date, 'yyyy-MM-dd')
+    filters:{
+      showDate(value){
+        //1.将时间戳转成Date对象
+        const date = new Date(value * 1000)
+        //2.将date对象进行格式化
+        return formatDate(date,'yyyy-MM-dd')
       }
     }
+   
 	}
 </script>
 

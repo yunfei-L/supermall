@@ -7,6 +7,8 @@
       <detail-shop-info :shop="shop"></detail-shop-info>
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"></detail-goods-info>
       <detail-param-info :param-info="paramInfo"></detail-param-info>
+      <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
+      <good-list :goods= "recommends"></good-list>
     </scroll>
   </div>
 </template>
@@ -16,12 +18,15 @@ import DetailNavBar from "./childCompos/DetailNavBar.vue";
 import DetailSwiper from "./childCompos/DetailSwiper.vue";
 import DetailBaseInfo from "./childCompos/DetailBaseInfo.vue";
 import DetailShopInfo from "./childCompos/DetailShopInfo.vue";
-import DetailParamInfo from "./childCompos/DetailParamInfo.vue"
+import DetailParamInfo from "./childCompos/DetailParamInfo.vue";
+import DetailCommentInfo from "./childCompos/DetailCommentInfo.vue"
 
 
 import Scroll from "components/common/scroll/Scroll";
-import { getDetail, Goods, Shop,GoodsParam } from "../../network/detail";
+import { getDetail, Goods, Shop,GoodsParam,getRecommend} from "../../network/detail";
 import DetailGoodsInfo from './childCompos/DetailGoodsInfo.vue';
+import GoodList from 'components/content/goods/GoodList'
+
 
 
 
@@ -35,7 +40,10 @@ export default {
     DetailShopInfo,
     Scroll,
     DetailGoodsInfo,
-    DetailParamInfo
+    DetailParamInfo,
+    DetailCommentInfo,
+    GoodList,
+    
   },
   data() {
     return{
@@ -44,13 +52,15 @@ export default {
       goods: {},
       shop: {},
       detailInfo:{},
-      paramInfo:{}
+      paramInfo:{},
+      commentInfo:{},
+      recommends:[]
     };
   },
   created() {
     // console.log(this.$route.params)
     this.iid = this.$route.params.id;
-
+    //请求详情数据
     getDetail(this.iid).then((res) => {
       const data = res.result
       //1.获取顶部的图片轮播图数据
@@ -71,7 +81,16 @@ export default {
 
       //5.获取参数的信息
       this.paramInfo = new GoodsParam(data.itemParams.info,data.itemParams.rule)
+
+      //6.取出评论信息
+      if(data.rate.cRate !== 0){
+        this.commentInfo = data.rate.list[0]
+      }
     });
+    //获取推荐数据
+    getRecommend().then(res => {
+      this.recommends = res.data.list
+    })
   },
   methods:{
       imageLoad(){
