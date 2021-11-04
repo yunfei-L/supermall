@@ -26,10 +26,7 @@ import Scroll from "components/common/scroll/Scroll";
 import { getDetail, Goods, Shop,GoodsParam,getRecommend} from "../../network/detail";
 import DetailGoodsInfo from './childCompos/DetailGoodsInfo.vue';
 import GoodList from 'components/content/goods/GoodList'
-
-
-
-
+import {itemListenerMixin} from '../../common/mixin'
 
 export default {
   name: "Detail",
@@ -43,8 +40,8 @@ export default {
     DetailParamInfo,
     DetailCommentInfo,
     GoodList,
-    
   },
+  mixins:[itemListenerMixin],
   data() {
     return{
       iid: null,
@@ -96,6 +93,12 @@ export default {
       imageLoad(){
           this.$refs.scroll.refresh()
       }
+  },
+  mounted(){
+    // console.log(2)
+  },
+  destroyed(){
+    this.$bus.$off('itemImgLoad',this.itemImgListener)
   }
 };
 </script>

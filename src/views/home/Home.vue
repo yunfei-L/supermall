@@ -8,10 +8,10 @@
           v-show="isTabFixed"
           ref="tabControl1"
         ></tab-control>
-    <scroll class="content" ref="Scroll" :probe-type="3" :pull-up-load="true" @scroll="contentScroll" @pullingUp="loadMore">
+    <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true" @scroll="contentScroll" @pullingUp="loadMore">
       <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"></home-swiper>
         <recommend-view :recommends="recommends"></recommend-view>
-        <feature-view></feature-view>
+        <feature-view @FImgLoad="FImgLoad" ></feature-view>
         <tab-control
           :titles="['流行', '新款', '精选']"
           @tabClick="tabClick"
@@ -35,7 +35,7 @@ import Scroll from 'components/common/scroll/Scroll'
 import BackTop from 'components/content/backTop/BackTop'
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
-import {debounce} from "../../common/utils"
+import {itemListenerMixin} from '../../common/mixin'
 
 
 
@@ -51,6 +51,7 @@ export default {
     Scroll,
     BackTop
   },
+  mixins:[itemListenerMixin],
   data() {
     return {
       banners: [],
@@ -73,11 +74,15 @@ export default {
     },
   },
   activated(){
-    this.$refs.Scroll.scrollTo(0,this.saveY,0)
-    this.$refs.Scroll.refresh()
+    this.$refs.scroll.scrollTo(0,this.saveY,0)
+    this.$refs.scroll.refresh()
   },
   deactivated(){
-    this.saveY = this.$refs.Scroll.getScrollY()
+    //1.保存Y值
+    this.saveY = this.$refs.scroll.getScrollY()
+    //2.取消全局事件的监听
+    this.$bus.$off('itemImgLoad',this.itemImgListener)
+
   },
   created() {
     this.getHomeMultidata();
@@ -87,10 +92,7 @@ export default {
 
   },
   mounted(){
-    const refresh = debounce(this.$refs.Scroll.refresh,500)
-    this.$bus.$on('itemImageLoad',()=>{
-      refresh()
-    })
+    
   },
   methods: {
     tabClick(index) {
@@ -110,7 +112,7 @@ export default {
 
     },
     backClick(){
-      this.$refs.Scroll.scrollTo(0,0,500)
+      this.$refs.scroll.scrollTo(0,0,500)
     },
     contentScroll(position){
       this.isShowBackTop = -position.y > 1000
@@ -124,6 +126,10 @@ export default {
     swiperImageLoad(){
       // console.log(this.$refs.tabControl.$el.offsetTop)
       this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
+    },
+    FImgLoad(){
+      let x = this.$refs.tabControl2.$el.offsetTop
+      this.tabOffsetTop > x ?tabOffsetTop:x
     },
 
     //网络请求相关的方法
@@ -139,7 +145,7 @@ export default {
       getHomeGoods(type, page).then((res) => {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
-        this.$refs.Scroll.finishPullUp()
+        this.$refs.scroll.finishPullUp()
       });
     },
     
