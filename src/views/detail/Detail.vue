@@ -24,6 +24,7 @@
       <good-list ref="recommend" :goods="recommends"></good-list>
     </scroll>
     <detail-bottom-bar></detail-bottom-bar>
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -45,8 +46,9 @@ import {
 } from "../../network/detail";
 import DetailGoodsInfo from "./childCompos/DetailGoodsInfo.vue";
 import GoodList from "components/content/goods/GoodList";
-import { itemListenerMixin } from "../../common/mixin";
+import { itemListenerMixin,backTopMixin } from "../../common/mixin";
 import DetailBottomBar from './childCompos/DetailBottomBar.vue';
+
 
 export default {
   name: "Detail",
@@ -61,8 +63,9 @@ export default {
     DetailCommentInfo,
     GoodList,
     DetailBottomBar,
+    
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin,backTopMixin],
   data() {
     return {
       iid: null,
@@ -136,6 +139,8 @@ export default {
       this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 100);
     },
     contentScroll(position){
+
+      this.isShowBackTop = -position.y > 1000
       // console.log(position)
       //1.获取y值
       const positionY = -position.y
@@ -150,7 +155,8 @@ export default {
         }
       }
 
-    }
+    },
+   
   },
   mounted() {},
   destroyed() {
