@@ -23,6 +23,7 @@
       ></detail-comment-info>
       <good-list ref="recommend" :goods="recommends"></good-list>
     </scroll>
+    <detail-bottom-bar></detail-bottom-bar>
   </div>
 </template>
 
@@ -45,6 +46,7 @@ import {
 import DetailGoodsInfo from "./childCompos/DetailGoodsInfo.vue";
 import GoodList from "components/content/goods/GoodList";
 import { itemListenerMixin } from "../../common/mixin";
+import DetailBottomBar from './childCompos/DetailBottomBar.vue';
 
 export default {
   name: "Detail",
@@ -58,6 +60,7 @@ export default {
     DetailParamInfo,
     DetailCommentInfo,
     GoodList,
+    DetailBottomBar,
   },
   mixins: [itemListenerMixin],
   data() {
