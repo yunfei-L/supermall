@@ -23,7 +23,7 @@
       ></detail-comment-info>
       <good-list ref="recommend" :goods="recommends"></good-list>
     </scroll>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
@@ -156,6 +156,20 @@ export default {
       }
 
     },
+    addToCart(){
+      //1.获取购物车需要展示的信息
+      const product = {}
+      product.image = this.topImages[0]
+      product.title = this.goods.title
+      product.desc = this.goods.desc
+      product.price = this.goods.nowPrice
+      product.iid = this.iid
+
+      //将商品添加到购物车
+      this.$store.dispatch('addCart',product)
+
+      
+    }
    
   },
   mounted() {},
