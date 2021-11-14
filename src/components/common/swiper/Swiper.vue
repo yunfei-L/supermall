@@ -122,7 +122,7 @@
         let slidesEls = swiperEl.getElementsByClassName('slide');
 
         // 2.保存个数
-        this.slideCount = slidesEls.length;
+        this.slideCount =  slidesEls.length ;
 
         // 3.如果大于1个, 那么在前后分别添加一个slide
         if (this.slideCount > 1) {
