@@ -48,6 +48,10 @@ import DetailGoodsInfo from "./childCompos/DetailGoodsInfo.vue";
 import GoodList from "components/content/goods/GoodList";
 import { itemListenerMixin,backTopMixin } from "../../common/mixin";
 import DetailBottomBar from './childCompos/DetailBottomBar.vue';
+import {mapActions} from 'vuex'
+
+
+
 
 
 export default {
@@ -63,7 +67,6 @@ export default {
     DetailCommentInfo,
     GoodList,
     DetailBottomBar,
-    
   },
   mixins: [itemListenerMixin,backTopMixin],
   data() {
@@ -77,7 +80,7 @@ export default {
       commentInfo: {},
       recommends: [],
       themeTopYs: [],
-      currentIndex:0
+      currentIndex:0,
     };
   },
   created() {
@@ -126,6 +129,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions(['addCart']),
     imageLoad() {
       this.$refs.scroll.refresh();
       this.themeTopYs.push(0);
@@ -166,7 +170,9 @@ export default {
       product.iid = this.iid
 
       //将商品添加到购物车
-      this.$store.dispatch('addCart',product)
+      this.addCart(product).then(res => {
+        this.$toast.show(res,1500)
+      })
 
       
     }
@@ -175,7 +181,7 @@ export default {
   mounted() {},
   destroyed() {
     this.$bus.$off("itemImgLoad", this.itemImgListener);
-  },
+  }
 };
 </script>
 
